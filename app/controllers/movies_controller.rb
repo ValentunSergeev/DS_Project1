@@ -6,8 +6,9 @@ class MoviesController < ApplicationController
   def index
     if params[:query].present?
       @movies = Movie.where("name LIKE ?", "%#{params[:query]}%")
+    else
+      @movies = Movie.take(50)
     end
-
   end
 
   # GET /movies/1
@@ -16,8 +17,9 @@ class MoviesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_movie
-      @movie = Movie.find(params[:id])
-    end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_movie
+    @movie = Movie.find(params[:id])
+  end
 end
