@@ -18,6 +18,7 @@ RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources
 RUN apt update && apt install yarn
 RUN bundle exec rails webpacker:install
 RUN yarn install --check-files
+RUN yarn add bootstrap@4.3.1 jquery popper.js
 
 EXPOSE 3000
 

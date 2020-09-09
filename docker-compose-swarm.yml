@@ -1,0 +1,54 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_ROOT_PASSWORD=root
+      - POSTGRES_DATABASE=example
+      - POSTGRES_USER=example
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DATABASE_HOST=db
+      - RAILS_ENV=development
+    ports:
+      - '5432:5432'
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [ node.role == manager ]
+  web:
+    image: valentun/ds_project_1:latest
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    environment:
+      - POSTGRES_ROOT_PASSWORD=root
+      - POSTGRES_DATABASE=example
+      - POSTGRES_USER=example
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DATABASE_HOST=db
+      - RAILS_ENV=development
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    deploy:
+      replicas: 2
+      mode: replicated
+      resources:
+        limits:
+          cpus: ".5"
+          memory: 300M
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [ node.role != manager ]
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [ node.role == manager ]
