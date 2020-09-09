@@ -1,0 +1,38 @@
+<p id="notice"><%= notice %></p>
+
+<div class="row">
+
+
+  <%= form_tag movies_path, method: 'get', class: 'navbar-form', role: 'search' do %>
+    <div class="input-group mb3">
+      <%= text_field_tag :query, params[:query], size: 150, placeholder: "Movie name", class: "form-control" %>
+
+      <div class="input-group-append">
+        <%= submit_tag 'Search', class: 'btn btn-outline-secondary' %>
+      </div>
+    </div>
+  <% end %>
+
+
+  <% @movies.each do |movie| %>
+    <div class="col-sm-6">
+      <div class="card mt-3">
+        <h5 class="card-header"><%= movie.name %>
+          <span class="badge <%= rating_badge_for(movie) %>"><%= movie.score %></span></h5>
+        </h5>
+        <div class="card-body">
+          <div class="card-title">
+
+            <span class="border border-warning rounded p-2"><%= movie.rating %></span>
+            <span class="border border-primary rounded p-2"><%= movie.year %></span>
+            <span class="border border-primary rounded p-2"><%= movie.genre %></span>
+            <span class="border border-primary rounded p-2"><%= movie.country %></span>
+          </div>
+          <p class="card-text">
+          </p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+</div>
